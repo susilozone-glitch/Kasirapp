@@ -13,7 +13,9 @@
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
   .app{max-width:1100px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
-  header.bar{background:var(--primary);color:#fff;padding:14px 16px;font-size:1.2rem;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  header.bar{background:linear-gradient(135deg,#2563eb 0%,#0ea5e9 100%);color:#fff;padding:14px 16px;font-size:1.2rem;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  header.bar .brand{display:flex;align-items:center;gap:8px}
+  .ic-svg{width:1em;height:1em;display:inline-block;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .tabs{display:flex;border-bottom:1px solid var(--line);background:var(--card)}
   .tab{flex:1;text-align:center;padding:12px;font-weight:600;color:var(--medium);cursor:pointer;border-bottom:3px solid transparent}
   .tab.active{color:var(--primary);border-bottom-color:var(--primary)}
@@ -31,7 +33,7 @@
   .pemoji{font-size:32px}
   .pthumb{width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:var(--bg);display:flex;align-items:center;justify-content:center}
   .pthumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .pthumb-fb{font-size:38px}
+  .pthumb-fb{font-size:38px;color:var(--primary);opacity:.5}
   .cthumb{width:42px;height:42px;border-radius:8px;object-fit:cover;flex:0 0 auto}
   .pname{font-weight:600;font-size:.92rem;line-height:1.2}
   .psku{font-size:.7rem;color:var(--medium)}
@@ -78,11 +80,11 @@
   .quick{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px}
   .quick button{padding:8px 12px;border:1px solid var(--primary);background:transparent;color:var(--primary);border-radius:8px;cursor:pointer;font-size:.85rem}
   .card-box{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:12px 16px}
-  .receipt{max-width:360px;margin:16px auto;background:#fff;color:#1a1a1a;padding:20px;border-radius:10px;box-shadow:0 2px 14px rgba(37,99,235,.12);font-family:'Courier New',monospace}
+  .receipt{max-width:360px;margin:16px auto;background:#fff;color:#1a1a1a;padding:20px;border-radius:10px;box-shadow:0 2px 14px rgba(0,0,0,.12);font-family:'Courier New',monospace}
   .rc{text-align:center} .rline{display:flex;justify-content:space-between;font-size:.85rem;padding:2px 0}
-  .rdiv{border:none;border-top:1px dashed #bbb;margin:8px 0}
+  .rdiv{border:none;border-top:1px dashed #999;margin:8px 0}
   .stats{display:flex;gap:10px;padding:16px;flex-wrap:wrap}
-  .stat{flex:1 1 110px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 6px 18px rgba(37,99,235,.06)}
+  .stat{flex:1 1 110px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
   .stat .lab{font-size:.75rem;color:var(--medium)} .stat .val{font-size:1.3rem;font-weight:800;color:var(--primary)}
   .stat.wide{flex-basis:100%}
   .hgroup{margin:0 16px 12px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
@@ -95,7 +97,7 @@
 </head>
 <body>
 <div class="app">
-  <header class="bar"><span>🛒 Kasir App</span><span id="clock" style="font-size:.85rem;font-weight:500;opacity:.85"></span></header>
+  <header class="bar"><span class="brand"><svg class="ic-svg" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg> Kasir App</span><span id="clock" style="font-size:.85rem;font-weight:500;opacity:.85"></span></header>
   <div class="tabs">
     <div class="tab active" data-tab="pos" onclick="switchTab('pos')">Kasir</div>
     <div class="tab" data-tab="history" onclick="switchTab('history')">Riwayat</div>
@@ -139,29 +141,36 @@
 
 <!-- Receipt page -->
 <div class="page" id="receiptPage">
-  <header class="bar"><span>Struk Pembayaran</span><span><button class="x" onclick="printReceipt()">🖨️</button><button class="x" onclick="closeReceipt()">×</button></span></header>
+  <header class="bar"><span>Struk Pembayaran</span><span><button class="x" onclick="printReceipt()" title="Cetak"><svg class="ic-svg" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button><button class="x" onclick="closeReceipt()">×</button></span></header>
   <div class="scroll" id="receiptBody"></div>
 </div>
 
 <script>
-const img = (k,l)=>`https://loremflickr.com/400/400/${k}?lock=${l}`;
+const img = name=>`https://placehold.co/400x400/eef2ff/2563eb?text=${encodeURIComponent(name)}`;
+const SVG={
+  cart:'<svg class="ic-svg" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>',
+  trash:'<svg class="ic-svg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  receipt:'<svg class="ic-svg" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>',
+  box:'<svg class="ic-svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.3 7 12 12 20.7 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>'
+};
+window._kasirBox = SVG.box.replace(/"/g,'&quot;');
 const PRODUCTS = [
-  {id:'p01',name:'Kopi Hitam',category:'Minuman',price:12000,sku:'DRK-001',emoji:'☕',image:img('coffee,black',11)},
-  {id:'p02',name:'Es Teh Manis',category:'Minuman',price:8000,sku:'DRK-002',emoji:'🧊',image:img('iced,tea',12)},
-  {id:'p03',name:'Cappuccino',category:'Minuman',price:22000,sku:'DRK-003',emoji:'☕',image:img('cappuccino',13)},
-  {id:'p04',name:'Jus Alpukat',category:'Minuman',price:18000,sku:'DRK-004',emoji:'🥑',image:img('avocado,juice',14)},
-  {id:'p05',name:'Air Mineral',category:'Minuman',price:5000,sku:'DRK-005',emoji:'💧',image:img('water,bottle',15)},
-  {id:'p06',name:'Nasi Goreng',category:'Makanan',price:25000,sku:'FD-001',emoji:'🍚',image:img('fried,rice',21)},
-  {id:'p07',name:'Mie Ayam',category:'Makanan',price:20000,sku:'FD-002',emoji:'🍜',image:img('noodle,soup',22)},
-  {id:'p08',name:'Ayam Goreng',category:'Makanan',price:23000,sku:'FD-003',emoji:'🍗',image:img('fried,chicken',23)},
-  {id:'p09',name:'Sate Ayam',category:'Makanan',price:28000,sku:'FD-004',emoji:'🍢',image:img('satay,skewer',24)},
-  {id:'p10',name:'Gado-Gado',category:'Makanan',price:19000,sku:'FD-005',emoji:'🥗',image:img('vegetable,salad',25)},
-  {id:'p11',name:'Pisang Goreng',category:'Snack',price:10000,sku:'SN-001',emoji:'🍌',image:img('fried,banana',31)},
-  {id:'p12',name:'Roti Bakar',category:'Snack',price:14000,sku:'SN-002',emoji:'🍞',image:img('toast,bread',32)},
-  {id:'p13',name:'Kentang Goreng',category:'Snack',price:16000,sku:'SN-003',emoji:'🍟',image:img('french,fries',33)},
-  {id:'p14',name:'Donat',category:'Snack',price:9000,sku:'SN-004',emoji:'🍩',image:img('donut',34)},
-  {id:'p15',name:'Es Krim',category:'Dessert',price:15000,sku:'DS-001',emoji:'🍦',image:img('ice,cream',41)},
-  {id:'p16',name:'Puding Coklat',category:'Dessert',price:12000,sku:'DS-002',emoji:'🍮',image:img('chocolate,pudding',42)},
+  {id:'p01',name:'Kopi Hitam',category:'Minuman',price:12000,sku:'DRK-001',image:img('Kopi Hitam')},
+  {id:'p02',name:'Es Teh Manis',category:'Minuman',price:8000,sku:'DRK-002',image:img('Es Teh Manis')},
+  {id:'p03',name:'Cappuccino',category:'Minuman',price:22000,sku:'DRK-003',image:img('Cappuccino')},
+  {id:'p04',name:'Jus Alpukat',category:'Minuman',price:18000,sku:'DRK-004',image:img('Jus Alpukat')},
+  {id:'p05',name:'Air Mineral',category:'Minuman',price:5000,sku:'DRK-005',image:img('Air Mineral')},
+  {id:'p06',name:'Nasi Goreng',category:'Makanan',price:25000,sku:'FD-001',image:img('Nasi Goreng')},
+  {id:'p07',name:'Mie Ayam',category:'Makanan',price:20000,sku:'FD-002',image:img('Mie Ayam')},
+  {id:'p08',name:'Ayam Goreng',category:'Makanan',price:23000,sku:'FD-003',image:img('Ayam Goreng')},
+  {id:'p09',name:'Sate Ayam',category:'Makanan',price:28000,sku:'FD-004',image:img('Sate Ayam')},
+  {id:'p10',name:'Gado-Gado',category:'Makanan',price:19000,sku:'FD-005',image:img('Gado-Gado')},
+  {id:'p11',name:'Pisang Goreng',category:'Snack',price:10000,sku:'SN-001',image:img('Pisang Goreng')},
+  {id:'p12',name:'Roti Bakar',category:'Snack',price:14000,sku:'SN-002',image:img('Roti Bakar')},
+  {id:'p13',name:'Kentang Goreng',category:'Snack',price:16000,sku:'SN-003',image:img('Kentang Goreng')},
+  {id:'p14',name:'Donat',category:'Snack',price:9000,sku:'SN-004',image:img('Donat')},
+  {id:'p15',name:'Es Krim',category:'Dessert',price:15000,sku:'DS-001',image:img('Es Krim')},
+  {id:'p16',name:'Puding Coklat',category:'Dessert',price:12000,sku:'DS-002',image:img('Puding Coklat')},
 ];
 const CATEGORIES = ['Semua','Minuman','Makanan','Snack','Dessert'];
 const TAX_RATE = 0.11;
@@ -212,7 +221,7 @@ function render(){
   const list = PRODUCTS.filter(p=>(category==='Semua'||p.category===category)&&(!q||p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q)));
   document.getElementById('grid').innerHTML = list.length? list.map(p=>
     `<div class="pcard" onclick="addItem(${JSON.stringify(p).replace(/"/g,'&quot;')})">
-      <div class="pthumb"><img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.parentNode.innerHTML='<span class=&quot;pthumb-fb&quot;>${p.emoji}</span>'"></div>
+      <div class="pthumb"><img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.parentNode.innerHTML='<span class=&quot;pthumb-fb&quot;>'+_kasirBox+'</span>'"></div>
       <span class="pname">${p.name}</span>
       <span class="psku">${p.sku}</span><span class="pprice">${idr(p.price)}</span></div>`).join('')
     : '<div class="empty" style="grid-column:1/-1"><p>Tidak ada produk ditemukan</p></div>';
@@ -221,7 +230,7 @@ function render(){
 
 function cartHTML(){
   const t = totals();
-  if(!cart.length) return '<div class="empty"><div class="ic">🛒</div><p>Keranjang masih kosong</p><small>Tap produk untuk menambahkan</small></div>';
+  if(!cart.length) return '<div class="empty"><div class="ic" style="font-size:48px;color:var(--primary);opacity:.4">'+SVG.cart+'</div><p>Keranjang masih kosong</p><small>Tap produk untuk menambahkan</small></div>';
   const items = cart.map(i=>`<div class="citem">
       <img class="cthumb" src="${i.product.image}" alt="" onerror="this.style.display='none'">
       <div class="info"><div class="nm">${i.product.name}</div>
@@ -229,7 +238,7 @@ function cartHTML(){
       <div class="qty"><button class="qbtn" onclick="setQty('${i.product.id}',${i.qty-1})">−</button>
         <span class="qval">${i.qty}</span>
         <button class="qbtn" onclick="setQty('${i.product.id}',${i.qty+1})">+</button>
-        <button class="qbtn" style="color:var(--danger)" onclick="removeItem('${i.product.id}')">🗑</button></div></div>`).join('');
+        <button class="qbtn" style="color:var(--danger)" onclick="removeItem('${i.product.id}')">${SVG.trash}</button></div></div>`).join('');
   return `<div class="citems">${items}</div>
     <div class="summary">
       <div class="srow"><span>Subtotal (${t.itemCount} item)</span><span>${idr(t.subtotal)}</span></div>
@@ -242,7 +251,7 @@ function renderCart(){
   document.getElementById('cartContent').innerHTML = cartHTML();
   document.getElementById('cartContentMobile').innerHTML = cartHTML();
   const t = totals();
-  document.getElementById('mbar').innerHTML = t.itemCount? `<button onclick="openCart()">🛒 ${t.itemCount} item · ${idr(t.subtotal)}</button>`:'';
+  document.getElementById('mbar').innerHTML = t.itemCount? `<button onclick="openCart()">${SVG.cart} ${t.itemCount} item · ${idr(t.subtotal)}</button>`:'';
 }
 
 function openCart(){ document.getElementById('cartModal').classList.add('open'); }
@@ -260,7 +269,7 @@ function renderCheckout(){
   const change = Math.max(0,paid-t.total);
   const quick=[t.total,50000,100000,150000,200000].filter((v,i,a)=>v>=t.total&&a.indexOf(v)===i).slice(0,4);
   document.getElementById('checkoutBody').innerHTML = `
-    <div class="card-box">${cart.map(i=>`<div class="field"><span>${i.product.emoji} ${i.product.name} <small style="color:var(--medium)">×${i.qty}</small></span><span>${idr(i.product.price*i.qty)}</span></div>`).join('')}</div>
+    <div class="card-box">${cart.map(i=>`<div class="field"><span>${i.product.name} <small style="color:var(--medium)">×${i.qty}</small></span><span>${idr(i.product.price*i.qty)}</span></div>`).join('')}</div>
     <div class="field"><span>Diskon (Rp)</span><input type="number" value="${discount||''}" placeholder="0" oninput="setDiscount(this.value)"></div>
     <div class="card-box" style="padding:12px 16px">
       <div class="srow"><span>Subtotal</span><span>${idr(t.subtotal)}</span></div>
@@ -337,7 +346,7 @@ function renderHistory(){
     <div class="stat"><div class="lab">Transaksi Hari Ini</div><div class="val">${todays.length}</div></div>
     <div class="stat"><div class="lab">Item Terjual</div><div class="val">${itemsSold}</div></div>
     <div class="stat wide"><div class="lab">Omzet Hari Ini</div><div class="val">${idr(rev)}</div></div></div>`;
-  if(!sales.length){ html+='<div class="empty"><div class="ic">🧾</div><p>Belum ada transaksi</p></div>'; }
+  if(!sales.length){ html+='<div class="empty"><div class="ic" style="font-size:48px;color:var(--primary);opacity:.4">'+SVG.receipt+'</div><p>Belum ada transaksi</p></div>'; }
   else {
     html += Object.keys(groups).map(day=>{
       const ds=groups[day]; const tot=ds.reduce((a,s)=>a+s.total,0);
