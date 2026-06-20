@@ -46,9 +46,7 @@ const CartView: React.FC<Props> = ({ onCheckout, showCheckoutButton = true }) =>
                 />
               )}
               <IonLabel>
-                <h3>
-                  {item.product.emoji} {item.product.name}
-                </h3>
+                <h3>{item.product.name}</h3>
                 <IonNote color="medium">
                   {formatIDR(item.product.price)} × {item.qty} ={' '}
                   {formatIDR(item.product.price * item.qty)}

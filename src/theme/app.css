@@ -1,5 +1,11 @@
 /* App-specific layout styles for Kasir App */
 
+/* Subtle gradient header */
+ion-toolbar[color='primary'] {
+  --background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+  --color: #ffffff;
+}
+
 .pos-layout {
   display: flex;
   height: 100%;
@@ -70,8 +76,10 @@
 }
 
 .product-thumb-fallback {
-  font-size: 38px;
+  font-size: 40px;
   line-height: 1;
+  color: var(--ion-color-primary);
+  opacity: 0.55;
 }
 
 .product-emoji {

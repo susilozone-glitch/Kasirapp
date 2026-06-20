@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { IonIcon } from '@ionic/react';
+import { fastFoodOutline } from 'ionicons/icons';
 import { Product } from '../types';
 import { formatIDR } from '../utils/format';
 
@@ -22,7 +24,7 @@ const ProductCard: React.FC<Props> = ({ product, onAdd }) => {
             onError={() => setImgError(true)}
           />
         ) : (
-          <span className="product-thumb-fallback">{product.emoji || '🛒'}</span>
+          <IonIcon className="product-thumb-fallback" icon={fastFoodOutline} />
         )}
       </div>
       <span className="product-name">{product.name}</span>

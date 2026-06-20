@@ -97,7 +97,7 @@ const CheckoutPage: React.FC = () => {
           {items.map((i) => (
             <IonItem key={i.product.id}>
               <IonLabel>
-                {i.product.emoji} {i.product.name}
+                {i.product.name}
                 <p>
                   {formatIDR(i.product.price)} × {i.qty}
                 </p>
